@@ -1,0 +1,21 @@
+{
+  "name": "aws-infra-drawio-integration-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Claude Code plugin: Terraform -> structure.yaml -> .drawio (AWS architecture diagrams), wrapping the official draw.io MCP server.",
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "validate": "node scripts/validate-structure.mjs",
+    "render": "node scripts/render-drawio.mjs",
+    "gen:shape-map": "node scripts/gen-shape-map.mjs",
+    "test": "bash scripts/selftest.sh"
+  },
+  "dependencies": {
+    "@drawio/mcp": "^1.5.0",
+    "yaml": "^2.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

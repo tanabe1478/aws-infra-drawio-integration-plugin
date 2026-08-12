@@ -1,0 +1,7 @@
+node_modules/
+
+# drawio-export コンテナの一時出力
+export/
+.drawio-export/
+
+.DS_Store

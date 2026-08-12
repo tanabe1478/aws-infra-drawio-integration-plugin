@@ -1,0 +1,88 @@
+<mxfile host="aws-infra-drawio" agent="aws-infra-drawio-integration-plugin" type="device">
+  <diagram id="orders-api" name="orders-api">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1830" pageHeight="1150" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object id="cloud" label="AWS Cloud" awsContainerKind="aws_cloud">
+          <mxCell style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=0;" vertex="1" parent="1"><mxGeometry x="228" y="80" width="1322" height="988" as="geometry" /></mxCell>
+        </object>
+        <object id="edge" label="エッジ (グローバル)" awsContainerKind="generic">
+          <mxCell style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;rounded=0;strokeColor=#879196;fillColor=none;verticalAlign=top;align=left;spacingLeft=10;fontColor=#879196;dashed=1;" vertex="1" parent="cloud"><mxGeometry x="216" y="44" width="320" height="302" as="geometry" /></mxCell>
+        </object>
+        <object id="region" label="ap-northeast-1" awsContainerKind="region">
+          <mxCell style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#00A4A6;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#147EBA;dashed=1;" vertex="1" parent="cloud"><mxGeometry x="26" y="506" width="1270" height="456" as="geometry" /></mxCell>
+        </object>
+        <object id="user" label="利用者" awsType="External::Users">
+          <mxCell style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.users;" vertex="1" parent="1"><mxGeometry x="40" y="535" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="waf" label="orders-edge-acl" awsType="AWS::WAFv2::WebACL" source="terraform/main.tf:aws_wafv2_web_acl.edge">
+          <mxCell style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#DD344C;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.waf;" vertex="1" parent="edge"><mxGeometry x="216" y="198" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="cdn" label="web distribution" awsType="AWS::CloudFront::Distribution" source="terraform/main.tf:aws_cloudfront_distribution.web">
+          <mxCell style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudfront;" vertex="1" parent="edge"><mxGeometry x="26" y="44" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="api" label="orders-api (HTTP)" awsType="AWS::ApiGatewayV2::Api" source="terraform/main.tf:aws_apigatewayv2_api.orders">
+          <mxCell style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.endpoint;" vertex="1" parent="region"><mxGeometry x="406" y="44" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="api_fn" label="orders-api-handler" tooltip="注文の受付。DynamoDB へ書き込み、SQS へ後処理を投げる" awsType="AWS::Lambda::Function" source="terraform/main.tf:aws_lambda_function.orders_api">
+          <mxCell style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda_function;" vertex="1" parent="region"><mxGeometry x="596" y="44" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="orders_table" label="orders" awsType="AWS::DynamoDB::Table" source="terraform/main.tf:aws_dynamodb_table.orders">
+          <mxCell style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;" vertex="1" parent="region"><mxGeometry x="1166" y="44" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="queue" label="order-fulfillment" awsType="AWS::SQS::Queue" source="terraform/main.tf:aws_sqs_queue.fulfillment">
+          <mxCell style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sqs;" vertex="1" parent="region"><mxGeometry x="786" y="44" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="worker" label="order-fulfillment-worker" awsType="AWS::Lambda::Function" source="terraform/main.tf:aws_lambda_function.fulfillment_worker">
+          <mxCell style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda_function;" vertex="1" parent="region"><mxGeometry x="976" y="44" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="receipts" label="orders-receipts" awsType="AWS::S3::Bucket" source="terraform/main.tf:aws_s3_bucket.receipts">
+          <mxCell style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#7AA116;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;" vertex="1" parent="region"><mxGeometry x="1166" y="198" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="schedule" label="orders-nightly-reconcile" tooltip="cron(0 18 * * ? *) で日次の突合を起動" awsType="AWS::Events::Rule" source="terraform/main.tf:aws_cloudwatch_event_rule.nightly_reconcile">
+          <mxCell style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#232F3E;fillColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.rule;" vertex="1" parent="region"><mxGeometry x="26" y="198" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="alarm" label="orders-api-5xx" awsType="AWS::CloudWatch::Alarm" source="terraform/main.tf:aws_cloudwatch_metric_alarm.api_errors">
+          <mxCell style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.alarm;" vertex="1" parent="region"><mxGeometry x="26" y="352" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <object id="alerts" label="orders-alerts" awsType="AWS::SNS::Topic" source="terraform/main.tf:aws_sns_topic.alerts">
+          <mxCell style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;" vertex="1" parent="region"><mxGeometry x="216" y="198" width="78" height="78" as="geometry" /></mxCell>
+        </object>
+        <mxCell id="edge-0" value="HTTPS" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#232F3E;fontColor=#232F3E;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="user" target="cdn">
+          
+        <mxGeometry x="-0.65" y="0" relative="1" as="geometry"><Array as="points"><mxPoint x="294" y="574" /><mxPoint x="294" y="207" /></Array></mxGeometry></mxCell>
+        <mxCell id="edge-1" value="検査" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#232F3E;fontColor=#232F3E;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="cdn" target="waf">
+          
+        <mxGeometry x="-0.65" y="0" relative="1" as="geometry"><Array as="points"><mxPoint x="604" y="207" /><mxPoint x="604" y="361" /></Array></mxGeometry></mxCell>
+        <mxCell id="edge-2" value="API 呼び出し" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#232F3E;fontColor=#232F3E;dashed=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="cdn" target="api">
+          
+        <mxGeometry x="-0.4" y="-16" relative="1" as="geometry"><Array as="points"><mxPoint x="509" y="515" /><mxPoint x="699" y="515" /></Array></mxGeometry></mxCell>
+        <mxCell id="edge-3" value="同期呼び出し" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#232F3E;fontColor=#232F3E;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="api" target="api_fn">
+          
+        <mxGeometry x="-0.65" y="0" relative="1" as="geometry"><Array as="points"></Array></mxGeometry></mxCell>
+        <mxCell id="edge-4" value="書き込み" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#545B64;fontColor=#545B64;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="api_fn" target="orders_table">
+          
+        <mxGeometry x="-0.65" y="0" relative="1" as="geometry"><Array as="points"><mxPoint x="984" y="669" /><mxPoint x="984" y="614" /><mxPoint x="1364" y="614" /><mxPoint x="1364" y="669" /></Array></mxGeometry></mxCell>
+        <mxCell id="edge-5" value="送信" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#232F3E;fontColor=#232F3E;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="api_fn" target="queue">
+          
+        <mxGeometry x="-0.4" y="-16" relative="1" as="geometry"><Array as="points"></Array></mxGeometry></mxCell>
+        <mxCell id="edge-6" value="ポーリング" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#8C4FFF;fontColor=#8C4FFF;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="queue" target="worker">
+          
+        <mxGeometry x="-0.65" y="0" relative="1" as="geometry"><Array as="points"></Array></mxGeometry></mxCell>
+        <mxCell id="edge-7" value="領収書 PDF" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#545B64;fontColor=#545B64;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="worker" target="receipts">
+          
+        <mxGeometry x="-0.65" y="0" relative="1" as="geometry"><Array as="points"><mxPoint x="1364" y="669" /><mxPoint x="1364" y="823" /></Array></mxGeometry></mxCell>
+        <mxCell id="edge-8" value="参照" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#545B64;fontColor=#545B64;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="worker" target="orders_table">
+          
+        <mxGeometry x="-0.4" y="-16" relative="1" as="geometry"><Array as="points"></Array></mxGeometry></mxCell>
+        <mxCell id="edge-9" value="定期実行" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#B0084D;fontColor=#B0084D;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="schedule" target="worker">
+          
+        <mxGeometry x="-0.65" y="0" relative="1" as="geometry"><Array as="points"><mxPoint x="416" y="823" /><mxPoint x="416" y="746" /><mxPoint x="1210" y="746" /></Array></mxGeometry></mxCell>
+        <mxCell id="edge-10" value="通知" style="jettySize=auto;endArrow=block;endFill=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=#FFFFFF;strokeColor=#CD2264;fontColor=#CD2264;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=0;libavoidRouting=1;orthogonalLoop=1;html=1;" edge="1" parent="1" source="alarm" target="alerts">
+          
+        <mxGeometry x="-0.65" y="0" relative="1" as="geometry"><Array as="points"><mxPoint x="414" y="977" /><mxPoint x="414" y="823" /></Array></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

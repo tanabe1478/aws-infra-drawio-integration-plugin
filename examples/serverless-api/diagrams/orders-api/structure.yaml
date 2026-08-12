@@ -1,0 +1,140 @@
+# 注文 API の構成 (examples/serverless-api/terraform から抽出したもの)
+#
+# このファイルが「人間がレビューする対象」。座標は持たず、構造だけを持つ。
+# 描画: node scripts/render-drawio.mjs examples/serverless-api/diagrams/orders-api/structure.yaml
+version: 1
+
+metadata:
+  view: orders-api
+  description: 注文 API のリクエスト経路と非同期の後処理
+  repos:
+    - examples/serverless-api/terraform
+
+containers:
+  - id: cloud
+    kind: aws_cloud
+    name: AWS Cloud
+
+  - id: edge
+    kind: generic
+    name: エッジ (グローバル)
+    parent: cloud
+
+  - id: region
+    kind: region
+    name: ap-northeast-1
+    parent: cloud
+
+nodes:
+  # --- AWS の外側 ---
+  - id: user
+    type: External::Users
+    name: 利用者
+
+  # --- エッジ ---
+  - id: waf
+    type: AWS::WAFv2::WebACL
+    name: orders-edge-acl
+    container: edge
+    source: terraform/main.tf:aws_wafv2_web_acl.edge
+
+  - id: cdn
+    type: AWS::CloudFront::Distribution
+    name: web distribution
+    container: edge
+    source: terraform/main.tf:aws_cloudfront_distribution.web
+
+  # --- リージョン内 ---
+  - id: api
+    type: AWS::ApiGatewayV2::Api
+    name: orders-api (HTTP)
+    container: region
+    source: terraform/main.tf:aws_apigatewayv2_api.orders
+
+  - id: api_fn
+    type: AWS::Lambda::Function
+    name: orders-api-handler
+    description: 注文の受付。DynamoDB へ書き込み、SQS へ後処理を投げる
+    container: region
+    source: terraform/main.tf:aws_lambda_function.orders_api
+
+  - id: orders_table
+    type: AWS::DynamoDB::Table
+    name: orders
+    container: region
+    source: terraform/main.tf:aws_dynamodb_table.orders
+
+  - id: queue
+    type: AWS::SQS::Queue
+    name: order-fulfillment
+    container: region
+    source: terraform/main.tf:aws_sqs_queue.fulfillment
+
+  - id: worker
+    type: AWS::Lambda::Function
+    name: order-fulfillment-worker
+    container: region
+    source: terraform/main.tf:aws_lambda_function.fulfillment_worker
+
+  - id: receipts
+    type: AWS::S3::Bucket
+    name: orders-receipts
+    container: region
+    source: terraform/main.tf:aws_s3_bucket.receipts
+
+  - id: schedule
+    type: AWS::Events::Rule
+    name: orders-nightly-reconcile
+    description: cron(0 18 * * ? *) で日次の突合を起動
+    container: region
+    source: terraform/main.tf:aws_cloudwatch_event_rule.nightly_reconcile
+
+  - id: alarm
+    type: AWS::CloudWatch::Alarm
+    name: orders-api-5xx
+    container: region
+    source: terraform/main.tf:aws_cloudwatch_metric_alarm.api_errors
+
+  - id: alerts
+    type: AWS::SNS::Topic
+    name: orders-alerts
+    container: region
+    source: terraform/main.tf:aws_sns_topic.alerts
+
+edges:
+  - from: user
+    to: cdn
+    trigger: api_call
+    label: HTTPS
+  - from: cdn
+    to: waf
+    trigger: invoke
+    label: 検査
+  - from: cdn
+    to: api
+    trigger: api_call
+  - from: api
+    to: api_fn
+    trigger: invoke
+  - from: api_fn
+    to: orders_table
+    trigger: write
+  - from: api_fn
+    to: queue
+    trigger: send
+  - from: queue
+    to: worker
+    trigger: poll
+  - from: worker
+    to: receipts
+    trigger: write
+    label: 領収書 PDF
+  - from: worker
+    to: orders_table
+    trigger: read
+  - from: schedule
+    to: worker
+    trigger: schedule
+  - from: alarm
+    to: alerts
+    trigger: notify

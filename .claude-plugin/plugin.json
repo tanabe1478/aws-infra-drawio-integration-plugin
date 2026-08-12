@@ -1,0 +1,9 @@
+{
+  "name": "aws-infra-drawio",
+  "description": "Terraform から AWS インフラ構成図 (.drawio) を、中間ファイル (structure.yaml + conventions.md) 経由で生成・更新する。draw.io 公式 MCP (@drawio/mcp) をラップし、ネットワーク送信なしのローカル完結で動作する。",
+  "version": "0.1.0",
+  "author": {
+    "name": "tanabe1478"
+  },
+  "keywords": ["aws", "drawio", "diagram", "terraform", "mcp"]
+}

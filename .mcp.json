@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "drawio": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/node_modules/@drawio/mcp/src/index.js"],
+      "env": {
+        "DRAWIO_BASE_URL": "${DRAWIO_BASE_URL:-http://localhost:8080/}",
+        "DRAWIO_ICON_SERVICE_URL": "${DRAWIO_ICON_SERVICE_URL:-off}"
+      }
+    }
+  }
+}
