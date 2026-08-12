@@ -11,8 +11,14 @@ import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { ensureDependencies } from "./lib/deps.mjs";
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const require = createRequire(import.meta.url);
+
+// プラグインとして入れると依存が別の場所に置かれるため、先に解決できる状態にする。
+ensureDependencies(ROOT);
+
+const require = createRequire(join(ROOT, "package.json"));
 
 let entry;
 

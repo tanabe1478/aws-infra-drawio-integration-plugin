@@ -62,16 +62,16 @@ description: Terraform から AWS インフラ構成図 (.drawio) を作る・�
 
 ```bash
 # 1. 構造の検証 (存在しない id 参照、未知の trigger、未マップのリソース型)
-node ${CLAUDE_PLUGIN_ROOT}/scripts/validate-structure.mjs <dir>/structure.yaml
+node ${CLAUDE_PLUGIN_ROOT}/bin/cli.mjs validate <dir>/structure.yaml
 
 # 2. .drawio 生成 (--route で障害物を避ける経路をエッジに焼き込む)
-node ${CLAUDE_PLUGIN_ROOT}/scripts/render-drawio.mjs <dir>/structure.yaml --route
+node ${CLAUDE_PLUGIN_ROOT}/bin/cli.mjs render <dir>/structure.yaml --route
 
 # 3. 幾何の検証 (枠のはみ出し・重なり・負座標)
-node ${CLAUDE_PLUGIN_ROOT}/scripts/check-geometry.mjs <dir>/structure.yaml
+node ${CLAUDE_PLUGIN_ROOT}/bin/cli.mjs check <dir>/structure.yaml
 
 # 4. PNG に書き出して目で確認する
-bash ${CLAUDE_PLUGIN_ROOT}/scripts/export-drawio.sh <dir>/<view>.drawio
+node ${CLAUDE_PLUGIN_ROOT}/bin/cli.mjs export <dir>/<view>.drawio
 ```
 
 4 の PNG は Read ツールで必ず自分で見ること。ビルドが通っただけでは「できた」ではない。
@@ -103,7 +103,7 @@ draw.io 公式の shape インデックスから機械生成しているので�
 | `set_page` | 既存ファイルの 1 ページだけ差し替える。手編集した注釈ページを残したいときに使う |
 
 `open_drawio_xml` はブラウザを開く。ローカル完結の構成では `DRAWIO_BASE_URL` がセルフホストの draw.io を指しているので、
-先にそれが起動しているか確認する (`bash ${CLAUDE_PLUGIN_ROOT}/scripts/setup.sh --status`)。起動していなければ PNG 書き出しで代替する。
+先にそれが起動しているか確認する (`node ${CLAUDE_PLUGIN_ROOT}/bin/cli.mjs setup --status`)。起動していなければ PNG 書き出しで代替する。
 
 ## 更新モード (Terraform の変更に追従する)
 

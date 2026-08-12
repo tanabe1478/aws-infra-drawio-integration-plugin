@@ -11,6 +11,8 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { ensureDependencies } from "./lib/deps.mjs";
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const USAGE = `使い方: npx aws-infra-drawio <サブコマンド> [引数...]
@@ -57,6 +59,14 @@ if (!build) {
   console.error(`不明なサブコマンドです: ${name}\n`);
   process.stderr.write(USAGE);
   process.exit(2);
+}
+
+if (ensureDependencies(ROOT) === false && name !== "setup") {
+  console.error(
+    "依存 (yaml / @drawio/mcp) を解決できませんでした。\n" +
+      "git clone して使っている場合は `bash scripts/setup.sh` を実行してください。",
+  );
+  process.exit(1);
 }
 
 const [command, commandArgs] = build(args);
