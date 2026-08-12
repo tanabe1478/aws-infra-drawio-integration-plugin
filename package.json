@@ -1,6 +1,6 @@
 {
   "name": "aws-infra-drawio",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Claude Code plugin: Terraform -> structure.yaml -> .drawio (AWS architecture diagrams), wrapping the official draw.io MCP server.",
   "license": "MIT",
