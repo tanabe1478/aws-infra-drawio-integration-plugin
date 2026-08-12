@@ -21,18 +21,49 @@ draw.io 公式の MCP サーバー ([`@drawio/mcp`](https://github.com/jgraph/dr
 
 ## セットアップ
 
+たまにしか使わないなら、インストールせず npx で起動する。
+
 ```bash
-git clone <このリポジトリ>
-cd aws-infra-drawio-integration-plugin
-bash scripts/setup.sh
+npx aws-infra-drawio claude   # このプラグインを読み込んだ Claude Code が起動する
 ```
 
-Claude Code のプラグインとして読み込むと、`drawio` という名前で MCP サーバーが登録され、
-`/aws-diagram` スキルが使えるようになる。
+`drawio` という名前で MCP サーバーが登録され、`/aws-infra-drawio:aws-diagram` スキルが使えるようになる。
+セッションを閉じれば元の状態に戻り、手元には npx のキャッシュしか残らない。
+
+コマンド単体も npx から呼べる。
+
+```bash
+npx aws-infra-drawio validate <dir>/structure.yaml
+npx aws-infra-drawio render   <dir>/structure.yaml --route
+npx aws-infra-drawio check    <dir>/structure.yaml
+npx aws-infra-drawio export   <dir>/<view>.drawio png 1.5
+npx aws-infra-drawio help
+```
+
+### 常用するなら
+
+プラグインとして常に入れておく場合は marketplace 経由でインストールする。`marketplace.json` に npm を source として書ける。
+
+```json
+{
+  "name": "aws-infra-drawio",
+  "source": { "source": "npm", "package": "aws-infra-drawio" }
+}
+```
+
+### 開発するなら
+
+```bash
+git clone https://github.com/tanabe1478/aws-infra-drawio-integration-plugin.git
+cd aws-infra-drawio-integration-plugin
+bash scripts/setup.sh          # 依存の導入と shape インデックスの配置
+claude --plugin-dir .
+```
 
 ### ローカル完結について
 
-ネットワークへ出るのは初回の `npm install` と shape インデックスの取得だけ。それ以降は次のとおり。
+ネットワークへ出るのはパッケージの取得 (npx / npm install) だけ。shape インデックスはパッケージに同梱しているので、
+git clone して `setup.sh` を使う場合を除き別途の取得もいらない。それ以降は次のとおり。
 
 | 機能 | 通信 |
 |---|---|
@@ -57,7 +88,7 @@ bash scripts/setup.sh --status  # 状態を確認
 Claude Code で次のように頼む。
 
 ```
-/aws-diagram infra/ の Terraform から API の構成図を作って
+/aws-infra-drawio:aws-diagram infra/ の Terraform から API の構成図を作って
 ```
 
 スキルが IaC を読み、`structure.yaml` を提案し、レビュー後に `.drawio` と PNG を生成する。

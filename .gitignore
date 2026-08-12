@@ -5,3 +5,6 @@ export/
 .drawio-export/
 
 .DS_Store
+
+# ローカル固有の許可設定 (絶対パスを含むため配布しない)
+.claude/settings.local.json

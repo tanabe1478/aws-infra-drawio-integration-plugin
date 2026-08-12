@@ -1,9 +1,35 @@
 {
-  "name": "aws-infra-drawio-integration-plugin",
+  "name": "aws-infra-drawio",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "description": "Claude Code plugin: Terraform -> structure.yaml -> .drawio (AWS architecture diagrams), wrapping the official draw.io MCP server.",
+  "author": "tanabe1478",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanabe1478/aws-infra-drawio-integration-plugin.git"
+  },
+  "keywords": [
+    "aws",
+    "drawio",
+    "diagram",
+    "terraform",
+    "mcp",
+    "claude-code",
+    "claude-code-plugin"
+  ],
+  "bin": {
+    "aws-infra-drawio": "bin/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "scripts",
+    "skills",
+    "vendor",
+    "examples",
+    ".claude-plugin",
+    ".mcp.json",
+    "README.md"
+  ],
   "scripts": {
     "setup": "bash scripts/setup.sh",
     "validate": "node scripts/validate-structure.mjs",
@@ -17,5 +43,9 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   }
 }
