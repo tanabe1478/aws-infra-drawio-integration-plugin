@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Claude Code plugin: Terraform -> structure.yaml -> .drawio (AWS architecture diagrams), wrapping the official draw.io MCP server.",
+  "license": "MIT",
   "author": "tanabe1478",
   "repository": {
     "type": "git",
@@ -28,7 +29,8 @@
     "examples",
     ".claude-plugin",
     ".mcp.json",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "setup": "bash scripts/setup.sh",
