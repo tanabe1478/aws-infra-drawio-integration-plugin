@@ -1,0 +1,41 @@
+name: Publish
+
+# タグ push で npm へ公開する。認証は Trusted Publishing (OIDC) なので
+# NODE_AUTH_TOKEN / NPM_TOKEN は設定しない。長期間有効なトークンを持たずに済む
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write # OIDC トークンの発行に必須
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24' # Trusted Publishing は Node 22.14+ / npm 11.5.1+ が必要
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+
+      - run: npm ci
+
+      # shape-map の一致、例の検証、幾何の健全性、描画の決定性
+      - run: bash scripts/selftest.sh
+
+      # package.json の version とタグが一致していないと、意図しない版を公開してしまう
+      - name: Verify tag matches package version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$pkg" ]; then
+            echo "tag v$tag does not match package.json version $pkg" >&2
+            exit 1
+          fi
+
+      - run: npm publish
