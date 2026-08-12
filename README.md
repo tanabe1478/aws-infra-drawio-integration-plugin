@@ -42,14 +42,15 @@ npx aws-infra-drawio help
 
 ### 常用するなら
 
-プラグインとして常に入れておく場合は marketplace 経由でインストールする。`marketplace.json` に npm を source として書ける。
+プラグインとして常に入れておく場合は、このリポジトリを marketplace として登録する。
 
-```json
-{
-  "name": "aws-infra-drawio",
-  "source": { "source": "npm", "package": "aws-infra-drawio" }
-}
 ```
+/plugin marketplace add tanabe1478/aws-infra-drawio-integration-plugin
+/plugin install aws-infra-drawio@aws-infra-drawio
+```
+
+カタログ (`.claude-plugin/marketplace.json`) はこのリポジトリに置いているが、プラグインの実体は npm から入る。
+リポジトリを直接 source にすると依存 (`@drawio/mcp` / `yaml`) が入らず、別途 `setup.sh` が要るため。
 
 ### 開発するなら
 
