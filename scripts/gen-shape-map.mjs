@@ -57,6 +57,7 @@ const QUERIES = {
   "AWS::ElasticLoadBalancingV2::TargetGroup": "elastic load balancing",
   "AWS::Route53::HostedZone": "route 53 hosted zone",
   "AWS::CloudFront::Distribution": "cloudfront",
+  "AWS::CloudFront::Function": { icon: "cloudfront_functions" },
   "AWS::GlobalAccelerator::Accelerator": "global accelerator",
   "AWS::ApiGateway::RestApi": "api gateway endpoint",
   "AWS::ApiGatewayV2::Api": "api gateway endpoint",

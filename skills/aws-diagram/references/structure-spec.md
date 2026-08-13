@@ -112,6 +112,7 @@ edges:                      # 関係
 | `aws_lb_target_group` | `AWS::ElasticLoadBalancingV2::TargetGroup` |
 | `aws_route53_zone` | `AWS::Route53::HostedZone` |
 | `aws_cloudfront_distribution` | `AWS::CloudFront::Distribution` |
+| `aws_cloudfront_function` | `AWS::CloudFront::Function` |
 | `aws_globalaccelerator_accelerator` | `AWS::GlobalAccelerator::Accelerator` |
 | `aws_api_gateway_rest_api` | `AWS::ApiGateway::RestApi` |
 | `aws_apigatewayv2_api` | `AWS::ApiGatewayV2::Api` |
