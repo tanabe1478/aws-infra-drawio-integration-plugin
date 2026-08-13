@@ -146,7 +146,12 @@ export function renderDrawio({ structure, layout }) {
 
     const span = Math.abs(to.absX - from.absX) + Math.abs(to.absY - from.absY);
     // x は線上の位置 (-1 = 始点, 0 = 中点, 1 = 終点)、y は線からの距離。
-    const lx = span < SHORT_EDGE ? 0 : LABEL_X[slot % LABEL_X.length];
+    // labelPos で明示された場合はそれを使う (自動配置でも隣の線のラベルと並ぶ場合の逃げ道)。
+    const lx = Number.isFinite(e.labelPos)
+      ? Math.max(-1, Math.min(1, e.labelPos))
+      : span < SHORT_EDGE
+        ? 0
+        : LABEL_X[slot % LABEL_X.length];
     const ly = LABEL_Y[slot % LABEL_Y.length];
 
     lines.push(`          <mxGeometry x="${lx}" y="${ly}" relative="1" as="geometry" />`);

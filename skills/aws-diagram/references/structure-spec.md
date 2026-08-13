@@ -35,6 +35,7 @@ edges:                      # 関係
     trigger: write          # 線の意味。色と線種が決まる
     label: 注文を保存        # 省略時は trigger の既定ラベル
     rank: false             # 任意。true 以外を指定すると列の計算から除外する
+    labelPos: 0.55          # 任意。ラベルの線上の位置 (-1 = 始点, 0 = 中点, 1 = 終点)
 ```
 
 ## containers の kind
@@ -145,6 +146,13 @@ edges:                      # 関係
 | `aws_cloudtrail` | `AWS::CloudTrail::Trail` |
 
 `aws_subnet` / `aws_availability_zone` / `aws_security_group` は `nodes` ではなく `containers` として表現する。
+
+## edges の labelPos
+
+ラベルは自動で配置する。短い線は中点、長い線は始点寄りに置き、端点を共有する線どうしはずらす。
+それでも別の線のラベルと横に並んでしまう場合だけ `labelPos` で位置を指定する。
+
+長く迂回する線では、始点寄りより終点寄り (0.5 前後) のほうが対応が取りやすいことが多い。
 
 ## containers の band
 
