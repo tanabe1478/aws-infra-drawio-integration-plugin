@@ -17,6 +17,7 @@ containers:                 # 枠 (AWS Cloud / Region / VPC / サブネット ..
     name: AWS Cloud         # 省略時は kind の既定名
     parent: null            # 親コンテナの id。省略で最上位
     description: ...        # 図では tooltip になる
+    band: 2                 # 任意。縦の帯 (0 起点) を固定したいときだけ使う
 
 nodes:                      # リソース
   - id: api_fn              # 必須。図の中で一意
@@ -144,6 +145,15 @@ edges:                      # 関係
 | `aws_cloudtrail` | `AWS::CloudTrail::Trail` |
 
 `aws_subnet` / `aws_availability_zone` / `aws_security_group` は `nodes` ではなく `containers` として表現する。
+
+## containers の band
+
+同じ親を持つコンテナは、占める列の範囲が重ならなければ同じ帯に横並びになる。
+これで縦の間延びを防いでいるが、ときどき「列は重ならないが論理的には離れている」コンテナが
+上の帯へ詰められ、そこへ向かう線が別のコンテナの高さを横切って誤読を招く。
+
+その場合だけ `band` で帯を固定する。値は 0 起点で、上から順に数える。
+指定しなかったコンテナは宣言順に自動で詰められるので、下げたいコンテナにだけ付ければよい。
 
 ## AWS の外側に置く登場人物
 

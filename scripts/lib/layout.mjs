@@ -192,8 +192,22 @@ export function computeLayout({ structure, layout }) {
 
     const bands = [];
 
-    for (const child of (childContainers.get(containerId) ?? []).map((c) => measure(c.id))) {
-      let band = bands.find((b) => !collide(b.range, child.range));
+    for (const child of (childContainers.get(containerId) ?? []).map((c) => ({
+      ...measure(c.id),
+      band: c.band,
+    }))) {
+      // band を明示したコンテナはその帯に置く。列が重ならないだけで前の帯へ
+      // 詰められると、論理的な位置から遠くへ飛んで線が追いにくくなる場合がある。
+      let band = Number.isInteger(child.band)
+        ? bands[child.band]
+        : bands.find((b) => !collide(b.range, child.range));
+
+      if (!band && Number.isInteger(child.band)) {
+        while (bands.length <= child.band) {
+          bands.push({ range: null, height: 0, children: [] });
+        }
+        band = bands[child.band];
+      }
 
       if (!band) {
         band = { range: null, height: 0, children: [] };
