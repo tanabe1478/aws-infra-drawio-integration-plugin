@@ -115,11 +115,14 @@ export function renderDrawio({ structure, layout }) {
   }
 
   // --- エッジ ---
-  // 同じノードから出る線はラベルが同じ位置に集まって重なるので、
-  // 線上の位置 (x) と線からの距離 (y) をずらす。
+  // ラベルの位置は 2 つの失敗を避ける必要がある。
+  //   - 常に中点に置くと、長く迂回した線のラベルが無関係なリソースの真横に来る
+  //   - 常に始点寄りに置くと、短い線ではラベルがノード名 (アイコン下) と重なる
+  // そこで短い線は中点、長い線は始点寄りにし、端点を共有する線どうしはずらす。
+  const SHORT_EDGE = 360; // 始点と終点のマンハッタン距離 (px)
   const LABEL_X = [-0.65, -0.4, -0.85, -0.25];
-  const LABEL_Y = [0, -16, 16, -32];
-  const fanOut = new Map();
+  const LABEL_Y = [-14, 14, -32, 32];
+  const labelSlot = new Map();
 
   for (const [i, e] of structure.edges.entries()) {
     const from = geometry.get(e.from);
@@ -136,12 +139,15 @@ export function renderDrawio({ structure, layout }) {
         safeStyle(style)
       )}" edge="1" parent="1" source="${xmlAttr(e.from)}" target="${xmlAttr(e.to)}">`
     );
-    // ラベルは線の中点ではなく始点寄り (-1 = 始点, 1 = 終点) に置く。
-    // 中点だと、長く迂回した線のラベルが無関係なリソースの真横に来て読み違えられる。
-    const seen = fanOut.get(e.from) ?? 0;
-    fanOut.set(e.from, seen + 1);
-    const lx = LABEL_X[seen % LABEL_X.length];
-    const ly = LABEL_Y[seen % LABEL_Y.length];
+    // 端点を共有する線は同じ位置にラベルが集まるため、順番でずらす。
+    const slot = Math.max(labelSlot.get(e.from) ?? 0, labelSlot.get(e.to) ?? 0);
+    labelSlot.set(e.from, slot + 1);
+    labelSlot.set(e.to, slot + 1);
+
+    const span = Math.abs(to.absX - from.absX) + Math.abs(to.absY - from.absY);
+    // x は線上の位置 (-1 = 始点, 0 = 中点, 1 = 終点)、y は線からの距離。
+    const lx = span < SHORT_EDGE ? 0 : LABEL_X[slot % LABEL_X.length];
+    const ly = LABEL_Y[slot % LABEL_Y.length];
 
     lines.push(`          <mxGeometry x="${lx}" y="${ly}" relative="1" as="geometry" />`);
     lines.push("        </mxCell>");
